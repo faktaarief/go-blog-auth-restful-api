@@ -23,9 +23,10 @@ func main() {
 
 	router := gin.Default()
 
-	v1 := router.Group("/v1")
+	v1 := router.Group("/api/v1")
 
 	v1.GET("/users", userHandler.FindAll)
+	v1.GET("/users/:id", userHandler.FindById)
 
 	router.Run(":3000")
 }
