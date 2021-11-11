@@ -28,3 +28,9 @@ func (r *repository) FindById(id int) (domain.User, error) {
 
 	return user, err
 }
+
+func (r *repository) Create(user domain.User) (domain.User, error) {
+	err := r.db.Create(&user).Error
+
+	return user, err
+}

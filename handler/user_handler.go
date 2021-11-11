@@ -53,3 +53,30 @@ func (h *userHandler) FindById(c *gin.Context) {
 		"data": userResponse,
 	})
 }
+
+func (h *userHandler) Create(c *gin.Context) {
+	var userRequest helper.UserRequest
+
+	err := c.ShouldBindJSON(&userRequest)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"errors": err,
+		})
+
+		return
+	}
+
+	user, err := h.userService.Create(userRequest)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"errors": err,
+		})
+
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": user,
+	})
+}
