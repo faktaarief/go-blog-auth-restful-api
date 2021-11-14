@@ -28,6 +28,8 @@ func main() {
 	v1.GET("/users", userHandler.FindAll)
 	v1.GET("/users/:id", userHandler.FindById)
 	v1.POST("/users", userHandler.Create)
+	v1.PUT("/users/:id", userHandler.Update)
+	v1.DELETE("/users/:id", userHandler.Delete)
 
 	router.Run(":3000")
 }

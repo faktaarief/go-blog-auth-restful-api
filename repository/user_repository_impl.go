@@ -34,3 +34,15 @@ func (r *repository) Create(user domain.User) (domain.User, error) {
 
 	return user, err
 }
+
+func (r *repository) Update(userModel, userRequest domain.User) (domain.User, error) {
+	err := r.db.Model(&userModel).Updates(userRequest).Error
+
+	return userModel, err
+}
+
+func (r *repository) Delete(user domain.User) (domain.User, error) {
+	err := r.db.Unscoped().Delete(&user).Error
+
+	return user, err
+}

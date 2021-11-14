@@ -57,6 +57,12 @@ func (h *userHandler) FindById(c *gin.Context) {
 func (h *userHandler) Create(c *gin.Context) {
 	var userRequest helper.UserRequest
 
+	/**
+	* c.Bind for binding data using content-type "form-data" or "x-www-form-urlencoded" or "JSON"
+	* If using "form-" for content-type, we should added tag "form: " in userRequest
+	* c.ShouldBindJSON only binding for content-type of JSON
+	**/
+
 	err := c.ShouldBindJSON(&userRequest)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -78,5 +84,65 @@ func (h *userHandler) Create(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"data": user,
+	})
+}
+
+func (h *userHandler) Update(c *gin.Context) {
+	var userRequest helper.UserRequest
+
+	idString := c.Param("id")
+	id, _ := strconv.Atoi(idString)
+
+	/**
+	* c.Bind for binding data using content-type "form-data" or "x-www-form-urlencoded" or "JSON"
+	* If using "form-" for content-type, we should added tag "form: " in userRequest
+	**/
+
+	err := c.Bind(&userRequest)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"errors": err,
+		})
+
+		return
+	}
+
+	user, err := h.userService.Update(id, userRequest)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"errors": err,
+		})
+
+		return
+	}
+
+	userResponse := helper.UserResponse(user)
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": userResponse,
+	})
+}
+
+func (h *userHandler) Delete(c *gin.Context) {
+	idString := c.Param("id")
+	id, _ := strconv.Atoi(idString)
+
+	user, err := h.userService.Delete(id)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"errors": err,
+		})
+
+		return
+	}
+
+	userResponse := helper.UserResponse(user)
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Successfully delete user",
+		"data":    userResponse,
 	})
 }
